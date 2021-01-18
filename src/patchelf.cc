@@ -1610,12 +1610,12 @@ void rootPatch(ElfFile && elfFile)
     if (gotRPath != "") {
         patchRPath = "";
         for (auto & dirName : splitColonDelimitedString(gotRPath.c_str())) {
+            if (patchRPath != "")
+                 patchRPath += ":";
 	    if (dirName.compare(0, strlen("$ORIGIN"), "$ORIGIN") == 0) {
 		patchRPath += dirName;
 		continue;
 	    }
-            if (patchRPath != "")
-                 patchRPath += ":";
 	    if (dirName.compare(0, patchRootPath.length(), patchRootPath) != 0) {
                 patchRPath += patchRootPath + "/" + dirName;
             }
