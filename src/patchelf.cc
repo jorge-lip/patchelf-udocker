@@ -1610,6 +1610,7 @@ void rootPatch(ElfFile && elfFile)
     if (gotRPath != "") {
         patchRPath = "";
         for (auto & dirName : splitColonDelimitedString(gotRPath.c_str())) {
+	    /* Jan 2021 $ORIGIN:$ORIGIN case where colon is removed */
             if (patchRPath != "")
                  patchRPath += ":";
 	    if (dirName.compare(0, strlen("$ORIGIN"), "$ORIGIN") == 0) {
@@ -1676,12 +1677,13 @@ void rootRestore(ElfFile && elfFile)
     if (gotRPath != "") {
         patchRPath = "";
         for (auto & dirName : splitColonDelimitedString(gotRPath.c_str())) {
+	    /* Jan 2021 $ORIGIN:$ORIGIN case where colon is removed */
+            if (patchRPath != "")
+                 patchRPath += ":";
 	    if (dirName.compare(0, strlen("$ORIGIN"), "$ORIGIN") == 0) {
                 patchRPath += dirName;
                 continue;
             }
-            if (patchRPath != "")
-                 patchRPath += ":";
             if (dirName.compare(0, restoreRootPath.length(), restoreRootPath) == 0) {
                 patchRPath += dirName.substr(restoreRootPath.length());
             }
